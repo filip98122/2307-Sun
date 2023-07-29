@@ -1,0 +1,46 @@
+import pygame
+
+pygame.init()
+
+window = pygame.display.set_mode((1000,1000)) # Makes window
+
+
+class player1:
+    dx = 0
+    dy = 0
+    def __init__(self,speed,x,y):
+        
+        self.speed = speed
+        self.x = x
+        self.y = y
+        
+    def move(self,keys):
+        self.keys = keys
+        
+        
+        
+        
+        
+        
+        pass
+
+
+
+while True:
+    window.fill("Black") # Resets window
+    
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            exit()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    pygame.display.flip() # Updates window
