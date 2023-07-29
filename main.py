@@ -42,8 +42,8 @@ class Player:
         pass
 
 class square:
-    dx = 1
-    dy = 1
+    dx = 7.5
+    dy = 7.5
     redness = 10
     def __init__(self,x,y,speed, color):
         self.x = x
@@ -62,22 +62,22 @@ class square:
         
         # Bounce the ball of window edges
         if self.x <= 0:
-            self.dx = 1
+            self.dx = 7.5
             self.redness+=25
 
         
         if self.x >= 900:
-            self.dx = -1
+            self.dx = -7.5
             self.redness+=25
 
             
         if self.y <= 0:
-            self.dy = 1
+            self.dy = 7.5
             self.redness+=25
 
             
         if self.y >= 900:
-            self.dy = -1
+            self.dy = -7.5
             self.redness+=2
         
         
@@ -85,7 +85,6 @@ class square:
         self.y += self.dy * self.speed
 
 class sun:
-    dy = -0.5
     def __init__(self,x,y,speed):
         self.x = x
         self.y = y
@@ -99,7 +98,7 @@ class sun:
         if self.active == 0:
             return
         
-        self.y += self.dy
+        self.y += self.speed
         if self.y < -85:
             self.y = 1081
             
@@ -122,12 +121,13 @@ class cloud:
         pass
     
     def move(self):
-        self.x += self.dx
+        self.x += self.speed
     
         pass
-sunce = sun(500,150,0.05)
-oblak = cloud(900,random.randint(150,300),0.85)
-p1 = Player(200,900,100,100,0,0,0.75)
+sunce = sun(500,150, -6)
+oblak = cloud(900,random.randint(150,300),-2.5)
+p1 = Player(200,900,100,100,0,0,4.5)
+kocka = square(random.randint(50,875),random.randint(50,875),3,0)
 
 l = []
 
@@ -136,13 +136,12 @@ for i in range(3):
     l.append(playa)
 
 cooldown = 30
-
+clock = pygame.time.Clock()
 
 
 
 
 while True:
-
     window.fill("Blue") # Resets window
     
     keys = pygame.key.get_pressed()
@@ -163,10 +162,10 @@ while True:
         play.move(keys, p1)
 
     #draws sun
-    
+    cooldown -= 1
     if cooldown < 0:
         if keys[pygame.K_s]:
-            cooldown = 120
+            cooldown = 15
             if sunce.active == 1:
                 sunce.active = 0
             else:
@@ -200,7 +199,6 @@ while True:
 
     # Draw player
     p1.draw(window)
-    
-    cooldown -= 1
 
     pygame.display.flip() # Updates window
+    clock.tick(60)
