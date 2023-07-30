@@ -106,34 +106,44 @@ class sun:
             pass
 
 class cloud:
-    dx = -0.20
+    sizebig = random.randint(50,60)
+    sizesmall = random.randint(40,50)
     def __init__(self,x,y,speed):
         self.x = x
         self.y = y
         self.speed = speed
-        
+        self.size = random.randint(40,65)
+         
     def draw(self,window):
-        pygame.draw.circle(window, pygame.Color("White"), (self.x - 20, self.y), 45) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y - 20), 50) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 90, self.y), 45) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y), 45) # Draws a cloud
+        
+        pygame.draw.circle(window, pygame.Color("White"), (self.x - 20, self.y), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y - 20), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color("White"), (self.x + 90, self.y), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y), self.size) # Draws a cloud
         
         pass
     
     def move(self):
         self.x += self.speed
-    
+
+        if self.x <= -105:
+            self.x = 1105
+        
+        
         pass
 sunce = sun(500,150, -6)
-oblak = cloud(900,random.randint(150,300),-2.5)
 p1 = Player(200,900,100,100,0,0,4.5)
 kocka = square(random.randint(50,875),random.randint(50,875),3,0)
 
-l = []
-
+l_squares = []
 for i in range(3):
     playa = square(random.randint(100,900),random.randint(100,900), random.randrange(1,2), pygame.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
-    l.append(playa)
+    l_squares.append(playa)
+
+l_clouds = []
+for i in range(3):
+    kloud = cloud(random.randint(600,900),random.randint(150,300),random.randint(-4,-2))
+    l_clouds.append(kloud)
 
 cooldown = 30
 clock = pygame.time.Clock()
@@ -153,12 +163,16 @@ while True:
     for event in events:
         if event.type == pygame.QUIT:
             exit()
-            
+    
+    #moves cloud
+    for play in l_clouds:
+        play.move()
+    
     # Move player
     p1.move(keys)
             
     # Move non player objects
-    for play in l:
+    for play in l_squares:
         play.move(keys, p1)
 
     #draws sun
@@ -185,16 +199,11 @@ while True:
     
     
     #draws cloud
-    oblak.move()
-    oblak.draw(window)
-    if oblak.x < - 200:
-        oblak.x = 1200
-        oblak.y = random.randint(150,300)
-
-    #random.randint(150,200)
+    for play in l_clouds:
+        play.draw(window)
     
     # Draw non player objects
-    for play in l:
+    for play in l_squares:
         play.draw(window)
 
     # Draw player
