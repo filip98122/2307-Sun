@@ -31,7 +31,7 @@ class Player:
             if keys[pygame.K_UP]:
                 self.dy -= 1
         
-        if self.y < 900:
+        if self.y < 885:
             if keys[pygame.K_DOWN]:
                 self.dy += 1
         self.x += self.speed * self.dx
@@ -47,7 +47,7 @@ class square:
     redness = 10
     def __init__(self,x,y,speed, color):
         self.x = x
-        self.y = y 
+        self.y = y
         self.speed = speed
         self.color = color
     def draw(self, window):
@@ -106,20 +106,37 @@ class sun:
             pass
 
 class cloud:
-    sizebig = random.randint(50,60)
-    sizesmall = random.randint(40,50)
-    def __init__(self,x,y,speed):
+    def __init__(self,x,y,speed,color):
         self.x = x
         self.y = y
         self.speed = speed
-        self.size = random.randint(40,65)
-         
+        self.color = color
+        self.size = random.randint(20,60)
+        self.grayness = random.randint(1,54)
     def draw(self,window):
         
-        pygame.draw.circle(window, pygame.Color("White"), (self.x - 20, self.y), self.size) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y - 20), self.size) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 90, self.y), self.size) # Draws a cloud
-        pygame.draw.circle(window, pygame.Color("White"), (self.x + 40, self.y), self.size) # Draws a cloud
+        if self.size > 50:
+            self.speed = -4.5
+        
+        if self.size > 35 and self.size < 45:
+            self.speed = -3
+        
+        if self.size < 30:
+            self.speed = -1.5
+        
+        if self.x >= 1104:
+            if self.grayness > 0:
+                self.grayness = random.randint(1,54)
+        
+        if self.grayness >= 55:
+            self.grayness = 0
+        
+        self.color = pygame.Color(255 - self.grayness,255 - self.grayness,255 - self.grayness)
+        
+        pygame.draw.circle(window, pygame.Color(self.color), (self.x - self.size * 0.3, self.y), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color(self.color), (self.x + self.size * 0.6, self.y - 20), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color(self.color), (self.x + self.size * 1.4, self.y), self.size) # Draws a cloud
+        pygame.draw.circle(window, pygame.Color(self.color), (self.x + self.size * 0.6, self.y), self.size) # Draws a cloud
         
         pass
     
@@ -131,6 +148,37 @@ class cloud:
         
         
         pass
+
+class rain:
+    def __init__(self,x,y,speed,color):
+        self.x = x
+        self.y = y
+        self.speed = speed
+        self.color = color
+        self.active = 1
+    def draw(self,window):
+        if self.active == 0:
+            return
+
+        self.color = pygame.Color(58),(213),(255)
+        
+        pygame.draw.circle(window,(self.color), (self.x,self.y), 5) # Draws a raindrop
+        if self.y >= 985:
+            self.active = 0
+    def move(self):
+        if self.active == 0:
+            return
+        self.y += self.speed
+        
+        if self.y >= 985:
+            self.active = 0
+        
+        pass
+
+cloudx = random.randint(700,900)
+cloudy = random.randint(150,300)
+
+kisa = rain(cloudx,cloudy - 10,4,pygame.Color(58,213,255))
 sunce = sun(500,150, -6)
 p1 = Player(200,900,100,100,0,0,4.5)
 kocka = square(random.randint(50,875),random.randint(50,875),3,0)
@@ -142,14 +190,18 @@ for i in range(3):
 
 l_clouds = []
 for i in range(3):
-    kloud = cloud(random.randint(600,900),random.randint(150,300),random.randint(-4,-2))
+    kloud = cloud(random.randint(700,900),random.randint(150,300),random.randint(-4,-2),pygame.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
     l_clouds.append(kloud)
+
+l_raindrops = []
+for i in range(1):
+    randrops = rain(300,0,4,pygame.Color(58,213,255))
+    l_raindrops.append(randrops)
 
 cooldown = 30
 clock = pygame.time.Clock()
 
-
-
+active = 0
 
 while True:
     window.fill("Blue") # Resets window
@@ -165,8 +217,21 @@ while True:
             exit()
     
     #moves cloud
-    for play in l_clouds:
-        play.move()
+    for kloud in l_clouds:
+        kloud.move()
+    
+    randdrop = random.randint(0,3000)
+    
+    if randdrop <= 10:
+        active = 1
+    
+    #moves raindrop
+    for raindrops in l_clouds:
+        raindrops.move()
+        
+            #draws raindrop
+    for raindrops in l_clouds:
+        raindrops.draw(window)
     
     # Move player
     p1.move(keys)
@@ -174,7 +239,7 @@ while True:
     # Move non player objects
     for play in l_squares:
         play.move(keys, p1)
-
+    
     #draws sun
     cooldown -= 1
     if cooldown < 0:
@@ -190,17 +255,15 @@ while True:
     pygame.draw.circle(window, pygame.Color("Green"), (200, 1000), 150) # Draws a hill
     pygame.draw.circle(window, pygame.Color("Green"), (750, 1075), 150) # Draws a hill
     pygame.draw.circle(window, pygame.Color("Green"), (500, 1075), 250) # Draws a hill
-    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
-    pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
     pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(750,650, 100, 350)) # Draws the log of the tree
     pygame.draw.circle(window, pygame.Color("Green"), (800, 660), 150) # Draws the leavs
-    
-    
+    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
+    pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
     
     
     #draws cloud
-    for play in l_clouds:
-        play.draw(window)
+    for kloud in l_clouds:
+        kloud.draw(window)
     
     # Draw non player objects
     for play in l_squares:
