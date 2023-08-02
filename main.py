@@ -142,7 +142,12 @@ class cloud:
     
     def move(self):
         self.x += self.speed
-
+        
+        self.randrop = random.randint(0,3000)
+        
+        if self.randrop <= 10:
+            self
+        
         if self.x <= -105:
             self.x = 1105
         
@@ -156,15 +161,18 @@ class rain:
         self.speed = speed
         self.color = color
         self.active = 1
+
     def draw(self,window):
         if self.active == 0:
             return
-
-        self.color = pygame.Color(58),(213),(255)
+        
+        self.color = pygame.Color(58,213,255)
         
         pygame.draw.circle(window,(self.color), (self.x,self.y), 5) # Draws a raindrop
         if self.y >= 985:
             self.active = 0
+            self.y = 0
+            
     def move(self):
         if self.active == 0:
             return
@@ -172,7 +180,8 @@ class rain:
         
         if self.y >= 985:
             self.active = 0
-        
+            self.y = 0
+            
         pass
 
 cloudx = random.randint(700,900)
@@ -195,13 +204,11 @@ for i in range(3):
 
 l_raindrops = []
 for i in range(1):
-    randrops = rain(300,0,4,pygame.Color(58,213,255))
-    l_raindrops.append(randrops)
+    raindrop = rain(300,0,4,pygame.Color(58,213,255))
+    l_raindrops.append(raindrop)
 
 cooldown = 30
 clock = pygame.time.Clock()
-
-active = 0
 
 while True:
     window.fill("Blue") # Resets window
@@ -220,18 +227,30 @@ while True:
     for kloud in l_clouds:
         kloud.move()
     
-    randdrop = random.randint(0,3000)
-    
-    if randdrop <= 10:
-        active = 1
+    if keys[pygame.K_r]:
+        raindrop = None
+        for r in l_raindrops:
+            if r.active == 0:
+                raindrop = r
+                break
+        
+        if raindrop == None:
+            raindrop = rain(100,0,4,pygame.Color(58,213,255))
+            l_raindrops.append(raindrop)
+        
+        raindrop.x = 100
+        raindrop.y = 0
+        raindrop.active = 1
+        raindrop.color = pygame.Color(58,213,255)
+        raindrop.speed = 4
     
     #moves raindrop
-    for raindrops in l_clouds:
-        raindrops.move()
+    for raindrop in l_raindrops:
+        raindrop.move()
         
-            #draws raindrop
-    for raindrops in l_clouds:
-        raindrops.draw(window)
+    #draws raindrop
+    for raindrop in l_raindrops:
+        raindrop.draw(window)
     
     # Move player
     p1.move(keys)
@@ -271,6 +290,8 @@ while True:
 
     # Draw player
     p1.draw(window)
+    
+    print(f'Raindrops: {len(l_raindrops)}')
 
     pygame.display.flip() # Updates window
     clock.tick(60)
