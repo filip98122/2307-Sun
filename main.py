@@ -210,6 +210,24 @@ for i in range(1):
 cooldown = 30
 clock = pygame.time.Clock()
 
+def spawnrain():
+    raindrop = None
+    for r in l_raindrops:
+        if r.active == 0:
+            raindrop = r
+            break
+        
+    if raindrop == None:
+        raindrop = rain(100,0,4,pygame.Color(58,213,255))
+        l_raindrops.append(raindrop)
+        
+    raindrop.x = 100
+    raindrop.y = 0
+    raindrop.active = 1
+    raindrop.color = pygame.Color(58,213,255)
+    raindrop.speed = 4
+
+
 while True:
     window.fill("Blue") # Resets window
     
@@ -228,21 +246,7 @@ while True:
         kloud.move()
     
     if keys[pygame.K_r]:
-        raindrop = None
-        for r in l_raindrops:
-            if r.active == 0:
-                raindrop = r
-                break
-        
-        if raindrop == None:
-            raindrop = rain(100,0,4,pygame.Color(58,213,255))
-            l_raindrops.append(raindrop)
-        
-        raindrop.x = 100
-        raindrop.y = 0
-        raindrop.active = 1
-        raindrop.color = pygame.Color(58,213,255)
-        raindrop.speed = 4
+        spawnrain()
     
     #moves raindrop
     for raindrop in l_raindrops:
