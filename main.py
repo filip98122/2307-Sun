@@ -143,14 +143,14 @@ class cloud:
     def move(self):
         self.x += self.speed
         
-        self.randrop = random.randint(0,3000)
-        
-        if self.randrop <= 10:
-            self
-        
         if self.x <= -105:
             self.x = 1105
         
+        randrop = random.randint(0,3000)
+        
+        if randrop <= 10:
+            if self.grayness >= 0:
+                spawnrain(self.x + random.randint(0,30),self.y)
         
         pass
 
@@ -184,10 +184,7 @@ class rain:
             
         pass
 
-cloudx = random.randint(700,900)
-cloudy = random.randint(150,300)
-
-kisa = rain(cloudx,cloudy - 10,4,pygame.Color(58,213,255))
+kisa = rain(100,0,4,pygame.Color(58,213,255))
 sunce = sun(500,150, -6)
 p1 = Player(200,900,100,100,0,0,4.5)
 kocka = square(random.randint(50,875),random.randint(50,875),3,0)
@@ -199,7 +196,7 @@ for i in range(3):
 
 l_clouds = []
 for i in range(3):
-    kloud = cloud(random.randint(700,900),random.randint(150,300),random.randint(-4,-2),pygame.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
+    kloud = cloud(random.randint(700,900),random.randint(100,400), random.randrange(-4,-2), pygame.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
     l_clouds.append(kloud)
 
 l_raindrops = []
@@ -210,7 +207,7 @@ for i in range(1):
 cooldown = 30
 clock = pygame.time.Clock()
 
-def spawnrain():
+def spawnrain(x,y):
     raindrop = None
     for r in l_raindrops:
         if r.active == 0:
@@ -218,15 +215,17 @@ def spawnrain():
             break
         
     if raindrop == None:
-        raindrop = rain(100,0,4,pygame.Color(58,213,255))
+        raindrop = rain(x,y - 10,4,pygame.Color(58,213,255))
         l_raindrops.append(raindrop)
         
-    raindrop.x = 100
-    raindrop.y = 0
+    raindrop.x = x
+    raindrop.y = y
     raindrop.active = 1
     raindrop.color = pygame.Color(58,213,255)
     raindrop.speed = 4
 
+ranbush = random.randint(300,850)
+rantreex = random.randint(200,800)
 
 while True:
     window.fill("Blue") # Resets window
@@ -246,7 +245,7 @@ while True:
         kloud.move()
     
     if keys[pygame.K_r]:
-        spawnrain()
+        spawnrain(raindrop.x,raindrop.y)
     
     #moves raindrop
     for raindrop in l_raindrops:
@@ -275,11 +274,11 @@ while True:
     sunce.move()
     sunce.draw(window)
     
-    pygame.draw.circle(window, pygame.Color("Green"), (200, 1000), 150) # Draws a hill
-    pygame.draw.circle(window, pygame.Color("Green"), (750, 1075), 150) # Draws a hill
-    pygame.draw.circle(window, pygame.Color("Green"), (500, 1075), 250) # Draws a hill
-    pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(750,650, 100, 350)) # Draws the log of the tree
-    pygame.draw.circle(window, pygame.Color("Green"), (800, 660), 150) # Draws the leavs
+    pygame.draw.circle(window, pygame.Color("Green"), (ranbush - 200, 1025), 150) # Draws a bush
+    pygame.draw.circle(window, pygame.Color("Green"), (ranbush, 1000), 100) # Draws a bush
+    pygame.draw.circle(window, pygame.Color("Green"), (ranbush + 100, 1025), 125) # Draws a bush
+    pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(rantreex,650, 100, 350)) # Draws the log of the tree
+    pygame.draw.circle(window, pygame.Color("Green"), (rantreex + 50, 660), 150) # Draws the leavs
     pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
     pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
     
