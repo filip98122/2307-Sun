@@ -7,11 +7,12 @@ window = pygame.display.set_mode((1000,1000)) # Makes window
 class Player:
     dx = 0
     dy = 0
-    def __init__(self,x,y,width,height,px,py,speed) -> None:
+    def __init__(self,x,y,width,height,radius,px,py,speed) -> None:
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.radius = radius
         self.px = px
         self.py = py
         self.speed = speed
@@ -19,26 +20,26 @@ class Player:
     def move(self, keys):
         self.dx = 0
         self.dy = 0
-        if self.x > 0:
+        if self.x > 50:
             if keys[pygame.K_LEFT]:
                 self.dx =- 1
                 
-        if self.x < 900:
+        if self.x < 950:
             if keys[pygame.K_RIGHT]:
                 self.dx += 1
                 
-        if self.y > 0:
+        if self.y > 50:
             if keys[pygame.K_UP]:
                 self.dy -= 1
         
-        if self.y < 885:
+        if self.y < 935:
             if keys[pygame.K_DOWN]:
                 self.dy += 1
         self.x += self.speed * self.dx
         self.y += self.speed * self.dy
     
     def draw(self, window):
-        pygame.draw.rect(window, pygame.Color("Red"), pygame.Rect(self.x, self.y, 100, 100)) # Draws a rectangle
+        pygame.draw.rect(window, pygame.Color("Red"), pygame.Rect(self.x - self.width / 2, self.y - self.height / 2, 100, 100)) # Draws a rectangle
         pass
 
 class square:
@@ -155,9 +156,10 @@ class cloud:
         pass
 
 class rain:
-    def __init__(self,x,y,speed,color):
+    def __init__(self,x,y,radius,speed,color):
         self.x = x
         self.y = y
+        self.radius = radius
         self.speed = speed
         self.color = color
         self.active = 1
@@ -186,7 +188,7 @@ class rain:
 
 kisa = rain(100,0,4,pygame.Color(58,213,255))
 sunce = sun(500,150, -6)
-p1 = Player(200,900,100,100,0,0,4.5)
+p1 = Player(200,935,100,100,50,0,0,4.5)
 kocka = square(random.randint(50,875),random.randint(50,875),3,0)
 
 l_squares = []
@@ -207,6 +209,15 @@ for i in range(1):
 cooldown = 30
 clock = pygame.time.Clock()
 
+def colison(x1,y1,radius1,x2,y2,radius2):
+    p1.x = x1
+    p1.y = y1
+    p1.radius = radius1
+    raindrop.x = x2
+    raindrop.y = y2
+    raindrop.radius = radius2
+    
+
 def spawnrain(x,y):
     raindrop = None
     for r in l_raindrops:
@@ -220,6 +231,7 @@ def spawnrain(x,y):
         
     raindrop.x = x
     raindrop.y = y
+    raindrop.radius = 5
     raindrop.active = 1
     raindrop.color = pygame.Color(58,213,255)
     raindrop.speed = 4
@@ -286,6 +298,10 @@ while True:
     #draws cloud
     for kloud in l_clouds:
         kloud.draw(window)
+    
+    for i in l_raindrops:
+        pass
+    
     
     # Draw non player objects
     for play in l_squares:
