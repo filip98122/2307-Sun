@@ -1,9 +1,12 @@
 import pygame
 import math
 import random
+pygame.font.init()
 pygame.init()
 
-window = pygame.display.set_mode((1000,1000)) # Makes window
+
+my_font = pygame.font.SysFont('Comic Sans MS', 20)
+window = pygame.display.set_mode((1000,1000),flags=pygame.SCALED, vsync=1) # Makes window
 
 class Player:
     dx = 0
@@ -107,6 +110,11 @@ class sun:
     def make(self):    
             pass
 
+
+
+
+
+
 class cloud:
     def __init__(self,x,y,speed,color):
         self.x = x
@@ -148,7 +156,7 @@ class cloud:
         if self.x <= -105:
             self.x = 1105
         
-        randrop = random.randint(0,3000)
+        randrop = random.randint(0,1000)
         
         if randrop <= 10:
             if self.grayness >= 0:
@@ -248,6 +256,15 @@ def spawnrain(x,y):
 ranbush = random.randint(300,850)
 rantreex = random.randint(200,800)
 
+
+def debugMode(window, player, l):
+    text_surface = my_font.render(f"Player pos: {(player.x, player.y)}", True, (0, 0, 0))
+    window.blit(text_surface, (0,0))
+    text_surface = my_font.render(f"Raindrops: {l} ", True, (0, 0, 0))
+    window.blit(text_surface, (0,50))
+    
+    
+
 while True:
     window.fill("Blue") # Resets window
     
@@ -327,6 +344,6 @@ while True:
     p1.draw(window)
     
     print(f'Raindrops: {len(l_raindrops)}')
-
+    debugMode(window,p1,len(l_raindrops))
     pygame.display.update() # Updates window
     clock.tick(60)
