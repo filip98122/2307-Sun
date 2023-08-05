@@ -1,4 +1,5 @@
 import pygame
+import math
 import random
 pygame.init()
 
@@ -186,7 +187,7 @@ class rain:
             
         pass
 
-kisa = rain(100,0,4,pygame.Color(58,213,255))
+kisa = rain(100,0,5,4,pygame.Color(58,213,255))
 sunce = sun(500,150, -6)
 p1 = Player(200,935,100,100,50,0,0,4.5)
 kocka = square(random.randint(50,875),random.randint(50,875),3,0)
@@ -203,21 +204,30 @@ for i in range(3):
 
 l_raindrops = []
 for i in range(1):
-    raindrop = rain(300,0,4,pygame.Color(58,213,255))
+    raindrop = rain(300,0,5,4,pygame.Color(58,213,255))
     l_raindrops.append(raindrop)
 
 cooldown = 30
 clock = pygame.time.Clock()
 
-def colison(x1,y1,radius1,x2,y2,radius2):
-    p1.x = x1
-    p1.y = y1
-    p1.radius = radius1
-    raindrop.x = x2
-    raindrop.y = y2
-    raindrop.radius = radius2
+def collison(x1,y1,r1,x2,y2,r2,dx,dy,dist):
+    x1 = p1.x
+    y1 = p1.y
+    r1 = p1.radius
+    x2 = raindrop.x
+    y2 = raindrop.y
+    r2 = raindrop.radius
+    dx = x2 - x1
+    dy = y2 - y1
+    dist  = dx * dx + dy * dy
+    dist = math.sqrt(dist)
     
-
+    if dist > r1 + r2:
+        return False
+    else:
+        return True
+    
+    
 def spawnrain(x,y):
     raindrop = None
     for r in l_raindrops:
@@ -226,7 +236,7 @@ def spawnrain(x,y):
             break
         
     if raindrop == None:
-        raindrop = rain(x,y - 10,4,pygame.Color(58,213,255))
+        raindrop = rain(x,y - 10,5,4,pygame.Color(58,213,255))
         l_raindrops.append(raindrop)
         
     raindrop.x = x
