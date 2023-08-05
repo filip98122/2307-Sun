@@ -185,7 +185,6 @@ class rain:
             self.active = 0
             self.y = 0
             
-        pass
 
 kisa = rain(100,0,5,4,pygame.Color(58,213,255))
 sunce = sun(500,150, -6)
@@ -210,7 +209,7 @@ for i in range(1):
 cooldown = 30
 clock = pygame.time.Clock()
 
-def collison(x1,y1,r1,x2,y2,r2,dx,dy,dist):
+def collison(x1,y1,r1, raindrop):
     x1 = p1.x
     y1 = p1.y
     r1 = p1.radius
@@ -225,7 +224,8 @@ def collison(x1,y1,r1,x2,y2,r2,dx,dy,dist):
     if dist > r1 + r2:
         return False
     else:
-        return True
+        raindrop.active = 0
+    
     
 def spawnrain(x,y):
     raindrop = None
@@ -271,10 +271,14 @@ while True:
     #moves raindrop
     for raindrop in l_raindrops:
         raindrop.move()
+
+        
+    # Collide rain drops
+    for raindrop in l_raindrops:
+        collison(p1.x,p1.y,p1.radius,raindrop)
         
     #draws raindrop
-    for raindrop in l_raindrops:
-        raindrop.draw(window)
+
     
     # Move player
     p1.move(keys)
@@ -308,6 +312,9 @@ while True:
     for kloud in l_clouds:
         kloud.draw(window)
     
+    for raindrop in l_raindrops:
+        raindrop.draw(window)
+    
     for i in l_raindrops:
         pass
     
@@ -321,5 +328,5 @@ while True:
     
     print(f'Raindrops: {len(l_raindrops)}')
 
-    pygame.display.flip() # Updates window
+    pygame.display.update() # Updates window
     clock.tick(60)
