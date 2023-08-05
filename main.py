@@ -227,7 +227,6 @@ def collison(x1,y1,r1,x2,y2,r2,dx,dy,dist):
     else:
         return True
     
-    
 def spawnrain(x,y):
     raindrop = None
     for r in l_raindrops:
