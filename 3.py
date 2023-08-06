@@ -64,4 +64,4 @@ def guess():
 
     pass
 
-guess()
+calc()
