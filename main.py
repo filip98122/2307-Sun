@@ -1,7 +1,7 @@
 import pygame
 import math
 import random
-
+import time
 
 
 from Rain import *
@@ -9,9 +9,8 @@ from Cloud import *
 from Sun import *
 from Player import *
 from Square import *
-
-
-
+from Power import *
+from Shield import *
 
 
 myscore = 0
@@ -47,25 +46,16 @@ for i in range(1):
 cooldown = 30
 clock = pygame.time.Clock()
 
-def collison(x1,y1,r1, raindrop,myscore):
-    x1 = p1.x
-    y1 = p1.y
-    r1 = p1.radius
-    x2 = raindrop.x
-    y2 = raindrop.y
-    r2 = raindrop.radius
+def collison(x1,y1,r1,x2,y2,r2):
     dx = x2 - x1
     dy = y2 - y1
     dist  = dx * dx + dy * dy
     dist = math.sqrt(dist)
     
     if dist > r1 + r2:
-        return [False,myscore]
+        return False
     else:
-        raindrop.active = 0
-        myscore += 1
-        raindrop.y = 0
-    return [True,myscore,raindrop,myhealth]
+        return True
         
 def spawnrain(x,y):
     raindrop = None
@@ -87,6 +77,7 @@ def spawnrain(x,y):
 
 ranbush = random.randint(300,850)
 rantreex = random.randint(200,800)
+ranflour = random.randint(100,900)
 
 myhealth = 20
 def debugMode(window, player,l,myscore):
@@ -126,12 +117,22 @@ while True:
         if event.type == pygame.QUIT:
             exit()
     
+    if collison(p1.x,p1.y,p1.radius,power.x,power.y,power.r) == True:
+        power.active = 0
+    
     #moves cloud
     for kloud in l_clouds:
         l_raindrops = kloud.move(l_raindrops)
     
     if keys[pygame.K_r]:
         spawnrain(0,0)
+    
+    # Collide rain drops
+    for raindrop in l_raindrops:
+        if collison(p1.x,p1.y,p1.radius,raindrop.x,raindrop.y,raindrop.radius) == True:
+            raindrop.active = 0
+            myscore += 1
+            raindrop.y = 0
     
     #moves raindrop
     for raindrop in l_raindrops:
@@ -144,16 +145,16 @@ while True:
     if myhealth <= 0:
         if myscore > highscore:
             f = open("highscore.txt","w")
-            f.write(str(myscore))
+            f.write(int(myscore))
             f.close()
         exit()
     
-    # Collide rain drops
-    for raindrop in l_raindrops:
-        myscore = collison(p1.x,p1.y,p1.radius,raindrop,myscore)[1]
-
     # Move player
     p1.move(keys)
+    
+    # Move power
+    if power.active >= 1:
+        power.move()
             
     # Move non player objects
     for play in l_squares:
@@ -183,14 +184,15 @@ while True:
     pygame.draw.circle(window, pygame.Color("Green"), (rantreex + 50, 660), 150) # Draws the leavs
     pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
     pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
-    
-    
+    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(ranflour,915, 50, 95)) # Draws the flour
+    pygame.draw.circle(window, pygame.Color("Red"), (ranflour - 25,930),50)#draws the pedals of the flour
+    pygame.draw.circle(window, pygame.Color("Yellow"), (ranflour - 25,930),25)#draws the bulb of the flour
     #draws cloud
     for kloud in l_clouds:
         kloud.draw(window)
     
-    for raindrop in l_raindrops:
-        raindrop.draw(window)
+        for raindrop in l_raindrops:
+            raindrop.draw(window)
     
     for i in l_raindrops:
         pass
@@ -199,7 +201,11 @@ while True:
     # Draw non player objects
     for play in l_squares:
         play.draw(window)
-
+    
+    #Draw Power
+    if power.active >= 1:
+        power.draw(window)
+    
     # Draw player
     p1.draw(window)
     

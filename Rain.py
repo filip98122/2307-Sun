@@ -28,3 +28,4 @@ class Rain:
         if self.y >= 1000:
             self.active = 0
             self.y = 0
+    
