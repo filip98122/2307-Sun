@@ -1,5 +1,4 @@
 import pygame
-import random
 from Power import *
 from Player import *
 pygame.init()
@@ -13,7 +12,8 @@ class Shield:
         self.rad = rad
         self.speed = speed
     def draw(self,window):
-            pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(self.x - 25,self.y -25, 150, 20))
+        pygame.draw.rect(window, pygame.Color("Red"), pygame.Rect(self.x - 95,self.y - 95, 190, 20))
+    
             
 shield = Shield(p1.x,p1.y, 50, 2)
 

@@ -12,7 +12,7 @@ from Square import *
 from Power import *
 from Shield import *
 
-
+shieldactive = 0
 myscore = 0
 
 pygame.font.init()
@@ -25,7 +25,7 @@ window = pygame.display.set_mode((1000,1000),flags=pygame.SCALED, vsync=1) # Mak
 
 kisa = Rain(100,0,5,4,pygame.Color(58,213,255))
 sunce = Sun(500,150, -6)
-p1 = Player(200,935,100,100,50,0,0,4.5)
+p1 = Player(200,935,100,100,50,0,0,5.5)
 kocka = Square(random.randint(50,875),random.randint(50,875),3,0)
 
 l_squares = []
@@ -107,6 +107,8 @@ except:
 while True:
     window.fill("Blue") # Resets window
     
+    shield = Shield(p1.x,p1.y, 50, 2)
+    
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_ESCAPE]:
@@ -119,6 +121,8 @@ while True:
     
     if collison(p1.x,p1.y,p1.radius,power.x,power.y,power.r) == True:
         power.active = 0
+        power.y = 1079
+        shieldactive = 1
     
     #moves cloud
     for kloud in l_clouds:
@@ -148,6 +152,9 @@ while True:
             f.write(int(myscore))
             f.close()
         exit()
+    
+    if power.y >= 910:
+        power.speed = 0
     
     # Move player
     p1.move(keys)
@@ -184,9 +191,9 @@ while True:
     pygame.draw.circle(window, pygame.Color("Green"), (rantreex + 50, 660), 150) # Draws the leavs
     pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
     pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
-    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(ranflour,915, 50, 95)) # Draws the flour
-    pygame.draw.circle(window, pygame.Color("Red"), (ranflour - 25,930),50)#draws the pedals of the flour
-    pygame.draw.circle(window, pygame.Color("Yellow"), (ranflour - 25,930),25)#draws the bulb of the flour
+    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(ranflour,900, 50, 95)) # Draws the flour
+    pygame.draw.circle(window, pygame.Color("Red"), (ranflour + 25,930),50)#draws the pedals of the flour
+    pygame.draw.circle(window, pygame.Color("Yellow"), (ranflour + 25,930),25)#draws the bulb of the flour
     #draws cloud
     for kloud in l_clouds:
         kloud.draw(window)
@@ -197,14 +204,15 @@ while True:
     for i in l_raindrops:
         pass
     
+    if shieldactive == 1:
+        shield.draw(window)
     
     # Draw non player objects
     for play in l_squares:
         play.draw(window)
     
     #Draw Power
-    if power.active >= 1:
-        power.draw(window)
+    power.draw(window)
     
     # Draw player
     p1.draw(window)
