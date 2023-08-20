@@ -80,7 +80,7 @@ rantreex = random.randint(200,800)
 ranflour = random.randint(100,900)
 h = 95
 
-myhealth = 2000
+myhealth = 20
 shieldhealth = 20
 def debugMode(window, player,l,myscore):
     
@@ -118,11 +118,17 @@ shield = Shield(p1.x,p1.y, 50, 2)
 while True:
     window.fill("Blue") # Resets window
 
+    ranpower = random.randint(0,5000)
     
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_ESCAPE]:
         exit()
+    
+    
+    mousePos = pygame.mouse.get_pos()
+    mouseState = pygame.mouse.get_pressed()
+    
     
     events = pygame.event.get()
     for event in events:
@@ -239,7 +245,8 @@ while True:
         play.draw(window)
     
     #Draw Power
-    power.draw(window)
+    if ranpower <= 10:
+        power.draw(window)
     
     # Draw player
     p1.draw(window)

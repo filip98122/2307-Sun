@@ -34,5 +34,5 @@ class Power:
     def move(self):
         self.y += self.speed
 
-power = Power(100,100,3.5,75,1)
+power = Power(100,100,3.5,75,0)
         
