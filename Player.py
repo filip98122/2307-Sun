@@ -12,7 +12,8 @@ class Player:
         self.px = px
         self.py = py
         self.speed = speed
-
+        self.rect = pygame.Rect(self.x - self.width / 2, self.y - self.height / 2, 100, 100)
+        
     def move(self, keys):
         self.dx = 0
         self.dy = 0

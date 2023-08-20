@@ -78,8 +78,10 @@ def spawnrain(x,y):
 ranbush = random.randint(300,850)
 rantreex = random.randint(200,800)
 ranflour = random.randint(100,900)
+h = 95
 
-myhealth = 20
+myhealth = 2000
+shieldhealth = 20
 def debugMode(window, player,l,myscore):
     
     text_surface = my_font.render(f"Player pos: {(player.x, player.y)}", True, (0, 0, 0))
@@ -92,7 +94,9 @@ def debugMode(window, player,l,myscore):
     window.blit(text_surface, (0,150))
     text_surface = my_font.render(f"Your Highscore: {highscore} ", True, (0, 0, 0))
     window.blit(text_surface, (0,200))
-
+    if shieldactive == 1:
+        text_surface = my_font.render(f"Shield drubility: {shieldhealth} ", True, (0, 0, 0))
+        window.blit(text_surface, (0,250))
 
 try:
     f = open("highscore.txt", "r")
@@ -103,11 +107,17 @@ except:
     f.close()
     highscore = -1
 
+def drawFlower():
+    
+    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(ranflour,995 - h, 50, h)) # Draws the flour
+    pygame.draw.circle(window, pygame.Color("Red"), (ranflour + 25,1025 - h),50)#draws the pedals of the flour
+    pygame.draw.circle(window, pygame.Color("Yellow"), (ranflour + 25,1025 - h),25)#draws the bulb of the flour
 
+
+shield = Shield(p1.x,p1.y, 50, 2)
 while True:
     window.fill("Blue") # Resets window
-    
-    shield = Shield(p1.x,p1.y, 50, 2)
+
     
     keys = pygame.key.get_pressed()
     
@@ -123,7 +133,7 @@ while True:
         power.active = 0
         power.y = 1079
         shieldactive = 1
-    
+    shield.move(p1.x,p1.y)
     #moves cloud
     for kloud in l_clouds:
         l_raindrops = kloud.move(l_raindrops)
@@ -145,6 +155,19 @@ while True:
             myhealth -= 1
             raindrop.y = 0
             raindrop.active = False
+        rect2 = pygame.Rect(raindrop.x-raindrop.radius, raindrop.y-raindrop.radius, raindrop.radius*2, raindrop.radius*2)
+        if collision2(shield.rect, rect2):
+            if shieldactive == 1:
+                if shieldhealth >= 1:
+                    raindrop.y = 0
+                    shieldhealth -= 1
+                    raindrop.active = False
+        
+        if collison(raindrop.x,raindrop.y,raindrop.radius,ranflour + 25,1025 - h,50) == True:
+            h += 15
+            raindrop.active = 0
+            raindrop.y = 0
+    
     
     if myhealth <= 0:
         if myscore > highscore:
@@ -152,6 +175,12 @@ while True:
             f.write(int(myscore))
             f.close()
         exit()
+    
+    if shieldactive == 0:
+        shieldhealth = 20
+    
+    if shieldhealth == 0:
+        shieldactive = 0
     
     if power.y >= 910:
         power.speed = 0
@@ -191,9 +220,7 @@ while True:
     pygame.draw.circle(window, pygame.Color("Green"), (rantreex + 50, 660), 150) # Draws the leavs
     pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(-1,985, 1000, 989)) # Draws the grass
     pygame.draw.rect(window, pygame.Color("Brown"), pygame.Rect(-1,990, 1000, 1001)) # Draws the dirt
-    pygame.draw.rect(window, pygame.Color("Green"), pygame.Rect(ranflour,900, 50, 95)) # Draws the flour
-    pygame.draw.circle(window, pygame.Color("Red"), (ranflour + 25,930),50)#draws the pedals of the flour
-    pygame.draw.circle(window, pygame.Color("Yellow"), (ranflour + 25,930),25)#draws the bulb of the flour
+    drawFlower()
     #draws cloud
     for kloud in l_clouds:
         kloud.draw(window)

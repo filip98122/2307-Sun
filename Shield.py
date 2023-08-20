@@ -11,8 +11,14 @@ class Shield:
         self.y = y
         self.rad = rad
         self.speed = speed
+        self.rect = pygame.Rect(self.x - 95,self.y - 95, 190, 20)
     def draw(self,window):
-        pygame.draw.rect(window, pygame.Color("Red"), pygame.Rect(self.x - 95,self.y - 95, 190, 20))
+        self.rect = pygame.Rect(self.x - 95,self.y - 95, 190, 20)
+        pygame.draw.rect(window, pygame.Color("Red"), self.rect)
+    
+    def move(self,x,y):
+        self.x = x
+        self.y =y
     
             
 shield = Shield(p1.x,p1.y, 50, 2)
