@@ -11,6 +11,7 @@ from Player import *
 from Square import *
 from Power import *
 from Shield import *
+from Butons import *
 
 shieldactive = 0
 myscore = 0
@@ -115,6 +116,11 @@ def drawFlower():
 
 
 shield = Shield(p1.x,p1.y, 50, 2)
+
+mousePos = pygame.mouse.get_pos()
+mouseState = pygame.mouse.get_pressed()
+
+
 while True:
     window.fill("Blue") # Resets window
 
@@ -124,10 +130,6 @@ while True:
     
     if keys[pygame.K_ESCAPE]:
         exit()
-    
-    
-    mousePos = pygame.mouse.get_pos()
-    mouseState = pygame.mouse.get_pressed()
     
     
     events = pygame.event.get()
