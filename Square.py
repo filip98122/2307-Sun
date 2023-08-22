@@ -11,6 +11,8 @@ class Square:
         self.y = y
         self.speed = speed
         self.color = color
+        self.rect3 = pygame.Rect(self.x, self.y, 75, 75)
+        
     def draw(self, window):
         if self.redness > 250:
             self.redness = 0

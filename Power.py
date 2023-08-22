@@ -33,9 +33,6 @@ class Power:
         pygame.draw.circle(window, pygame.Color(self.color), (self.x,self.y),self.r)
     def move(self):
         self.y += self.speed
-        
-        if self.y >= 985:
-            self.active = 0
-        
-power = Power(100,100,3.5,75,1)
+
+power = Power(100,100,3.5,75,0)
         
