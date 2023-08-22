@@ -23,6 +23,10 @@ pygame.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 20)
 window = pygame.display.set_mode((1000,1000),flags=pygame.SCALED, vsync=1) # Makes window
 
+from Butons import *
+
+mytext = text_surface = my_font.render(f" Play ", True, (0, 0, 0))
+window.blit(text_surface, (0,50))
 
 kisa = Rain(100,0,5,4,pygame.Color(58,213,255))
 sunce = Sun(500,150, -6)
@@ -131,6 +135,8 @@ while True:
     if keys[pygame.K_ESCAPE]:
         exit()
     
+    if ranpower <= 10:
+        power.active = 1
     
     events = pygame.event.get()
     for event in events:
@@ -140,7 +146,9 @@ while True:
     if collison(p1.x,p1.y,p1.radius,power.x,power.y,power.r) == True:
         power.active = 0
         power.y = 1079
+        power.active = 0
         shieldactive = 1
+        
     shield.move(p1.x,p1.y)
     #moves cloud
     for kloud in l_clouds:
@@ -248,6 +256,8 @@ while True:
     
     #Draw Power
     if ranpower <= 10:
+        power.active = 1
+    if power.active:
         power.draw(window)
     
     # Draw player

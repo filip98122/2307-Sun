@@ -1,5 +1,8 @@
 import pygame
 pygame.init()
+from main import *
+
+my_font = pygame.font.SysFont('Comic Sans MS', 20)
 
 class Button:
     def __init__(self,rect, text, rectColor,textColor):
@@ -10,10 +13,8 @@ class Button:
         
     def draw(self,window):
         pygame.draw.rect(window, self.rectColor, self.rect)
-            
-            
     
     
-boton = Button(pygame.Rect(200,200,400,200), pygame.Color("Red"), pygame.Color("Blue"))
+boton = Button(pygame.Rect(200,200,400,200),mytext, pygame.Color("Red"), pygame.Color("Blue"))
 
 

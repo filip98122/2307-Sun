@@ -18,8 +18,7 @@ class Shield:
     
     def move(self,x,y):
         self.x = x
-        self.y =y
-    
+        self.y =y    
             
 shield = Shield(p1.x,p1.y, 50, 2)
 
