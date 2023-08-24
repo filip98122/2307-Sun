@@ -1,7 +1,6 @@
 import pygame
 import random
 from Rain import *
-from Power import *
 pygame.init()
 
 

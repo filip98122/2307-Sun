@@ -23,10 +23,7 @@ pygame.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 20)
 window = pygame.display.set_mode((1000,1000),flags=pygame.SCALED, vsync=1) # Makes window
 
-from Butons import *
 
-mytext = text_surface = my_font.render(f" Play ", True, (0, 0, 0))
-window.blit(text_surface, (0,50))
 
 kisa = Rain(100,0,5,4,pygame.Color(58,213,255))
 sunce = Sun(500,150, -6)
@@ -121,49 +118,49 @@ def drawFlower():
 
 shield = Shield(p1.x,p1.y, 50, 2)
 
-mousePos = pygame.mouse.get_pos()
+(posx,posy) = pygame.mouse.get_pos()
 mouseState = pygame.mouse.get_pressed()
 
-
+        
 while True:
-    window.fill("Blue") # Resets window
+    window.fill("Blue" ) # Resets window
 
     ranpower = random.randint(0,5000)
-    
+                
     keys = pygame.key.get_pressed()
-    
+                
     if keys[pygame.K_ESCAPE]:
-        exit()
-    
+            exit()
+                
     if ranpower <= 10:
         power.active = 1
-    
+                
     events = pygame.event.get()
     for event in events:
         if event.type == pygame.QUIT:
             exit()
-    
+                
     if collison(p1.x,p1.y,p1.radius,power.x,power.y,power.r) == True:
         power.active = 0
         power.y = 1079
         power.active = 0
         shieldactive = 1
-        
+                    
     shield.move(p1.x,p1.y)
     #moves cloud
     for kloud in l_clouds:
         l_raindrops = kloud.move(l_raindrops)
-    
+                
     if keys[pygame.K_r]:
         spawnrain(0,0)
-    
+                
     # Collide rain drops
     for raindrop in l_raindrops:
         if collison(p1.x,p1.y,p1.radius,raindrop.x,raindrop.y,raindrop.radius) == True:
             raindrop.active = 0
             myscore += 1
             raindrop.y = 0
-    
+                
     #moves raindrop
     for raindrop in l_raindrops:
         raindrop.move()   
@@ -178,40 +175,40 @@ while True:
                     raindrop.y = 0
                     shieldhealth -= 1
                     raindrop.active = False
-        
+                    
         if collison(raindrop.x,raindrop.y,raindrop.radius,ranflour + 25,1025 - h,50) == True:
             h += 15
             raindrop.active = 0
             raindrop.y = 0
-    
-    
+                
+                
     if myhealth <= 0:
         if myscore > highscore:
             f = open("highscore.txt","w")
             f.write(int(myscore))
             f.close()
-        exit()
-    
+            exit()
+                
     if shieldactive == 0:
         shieldhealth = 20
-    
+                
     if shieldhealth == 0:
         shieldactive = 0
-    
+                
     if power.y >= 910:
         power.speed = 0
-    
+                
     # Move player
     p1.move(keys)
-    
+                
     # Move power
     if power.active >= 1:
         power.move()
-            
+                        
     # Move non player objects
     for play in l_squares:
         play.move(keys, p1)
-    
+                
     #draws sun
     cooldown -= 1
     if cooldown < 0:
@@ -223,12 +220,12 @@ while True:
                 sunce.active = 1
     sunce.move()
     sunce.draw(window)
-    
+                
     if myscore == 20:
         if myhealth <= 20:
             myhealth += 20
             raindrop.speed = 10
-            
+                        
     pygame.draw.circle(window, pygame.Color("Green"), (ranbush - 200, 1025), 150) # Draws a bush
     pygame.draw.circle(window, pygame.Color("Green"), (ranbush, 1000), 100) # Draws a bush
     pygame.draw.circle(window, pygame.Color("Green"), (ranbush + 100, 1025), 125) # Draws a bush
@@ -240,29 +237,29 @@ while True:
     #draws cloud
     for kloud in l_clouds:
         kloud.draw(window)
-    
-        for raindrop in l_raindrops:
-            raindrop.draw(window)
-    
+                
+    for raindrop in l_raindrops:
+        raindrop.draw(window)
+                
     for i in l_raindrops:
         pass
-    
+                
     if shieldactive == 1:
         shield.draw(window)
-    
+                
     # Draw non player objects
     for play in l_squares:
         play.draw(window)
-    
+                
     #Draw Power
     if ranpower <= 10:
         power.active = 1
     if power.active:
         power.draw(window)
-    
+                
     # Draw player
     p1.draw(window)
-    
+                
     print(f'Raindrops: {len(l_raindrops)}')
     debugMode(window,p1,len(l_raindrops),myscore)
     pygame.display.update() # Updates window

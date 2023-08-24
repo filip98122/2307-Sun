@@ -4,7 +4,12 @@ from Rain import *
 import math
 from Player import *
 from Player import *
+from Cloud import *
 
+l_clouds = []
+for i in range(3):
+    kloud = Cloud(random.randint(700,900),random.randint(100,400), random.randrange(-4,-2), pygame.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255)))
+    l_clouds.append(kloud)
 
 p1 = Player(200,935,100,100,50,0,0,4.5)
 
@@ -34,5 +39,5 @@ class Power:
     def move(self):
         self.y += self.speed
 
-power = Power(100,100,3.5,75,0)
+power = Power(kloud.x,kloud.y,3.5,75,0)
         
