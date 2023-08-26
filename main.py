@@ -1,7 +1,7 @@
 import pygame
 import math
 import random
-import time
+
 
 
 from Rain import *
@@ -130,8 +130,8 @@ while True:
     keys = pygame.key.get_pressed()
                 
     if keys[pygame.K_ESCAPE]:
-            exit()
-                
+        exit()
+    
     if ranpower <= 10:
         power.active = 1
                 
