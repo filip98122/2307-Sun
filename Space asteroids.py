@@ -31,34 +31,35 @@ class Player:
         
     def move(self):
         
-        if self.x > 75:
+        if self.x > 82:
             if keys[pygame.K_a] == False:
                 if keys[pygame.K_LEFT]:
                     self.x -= self.speed
                 
-        if self.x < 975:
+        if self.x < 985:
             if keys[pygame.K_d] == False:
                 if keys[pygame.K_RIGHT]:
                     self.x += self.speed
                 
-        if self.x > 75:
+        if self.x > 82:
             if keys[pygame.K_LEFT] == False:
                 if keys[pygame.K_a]:
                     self.x -= self.speed
                 
-        if self.x < 975:
+        if self.x < 985:
             if keys[pygame.K_RIGHT] == False:
                 if keys[pygame.K_d]:
                     self.x += self.speed
 
 class Laser:
-    def __init__(self,x,y,speed,width,height,active):
+    def __init__(self,x,y,speed,width,height,active,color):
         self.x = x
         self.y = y
         self.speed = speed
         self.width = width
         self.height = height
         self.active = active
+        self.color = color
         self.rect = pygame.draw.rect(window, pygame.Color("White"), pygame.Rect(self.x - self.width / 2, self.y - self.height / 2, 100, 100))
     
     def draw(self,window):
@@ -69,10 +70,16 @@ class Laser:
 
 
 clock = pygame.time.Clock()
-p1 = Player(500,900,150,50,5.5)
-laser = Laser(p1.x + 10,900,5.5,25,100,0)
+p1 = Player(500,900,175,25,5.5)
 
 
+l_lasers = []
+for i in range(1):
+    lasers = Laser(p1.x - 100,900,7.5,20,100,0,pygame.Color(171,3,49))
+    l_lasers.append(lasers)
+
+
+a = 1
 while True:
     window.fill("Blue" ) # Resets window
     
@@ -88,17 +95,25 @@ while True:
     
     #moves player
     p1.move()
-    
-    if laser.y <= 0:
-        laser.active = 0
-        laser.y = p1.y
-        laser.x = p1.x
-    
-    if keys[pygame.K_SPACE]:
-        laser.active = 1
-    
-    if laser.active == 1:
-        laser.move()
+
+    for i in l_lasers:
+        if lasers.y <= 60:
+            lasers.active = 0
+            lasers.y = p1.y
+            lasers.x = p1.x
+            a = 1
+        
+        if keys[pygame.K_SPACE]:
+            lasers.active = 1
+        
+        if keys[pygame.K_SPACE]:
+            if a == 1:
+                lasers.x = p1.x - 40
+                lasers.y = p1.y
+                a -= 1 
+        
+        if lasers.active == 1:
+            lasers.move()
     
     
     
@@ -108,8 +123,10 @@ while True:
     #draws player
     p1.draw(window)
     
-    if laser.active == 1:
-        laser.draw(window)
+    
+    for i in l_lasers:
+        if lasers.active == 1:
+            lasers.draw(window)
     
     
     pygame.display.update() # Updates window
